@@ -15,6 +15,7 @@ git:
 
 lab:
   username: {{ code_red_breach_challenge_gitea_customize_lab_username }}
+  sso: https://sso.{{ openshift_cluster_ingress_domain }}/realms/sso
 
 image:
   registry: Quay

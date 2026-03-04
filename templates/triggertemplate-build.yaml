@@ -2,34 +2,30 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: {{ .Values.app.name }}-run-build
+  name: {{ .Values.app.name }}-tt
 spec:
   params:
     - name: git-revision
-      description: The git revision
-      default: {{ .Values.git.branch }}
+    - name: git-commit-message
     - name: git-repo-url
-      description: The repo url
-    - name: output-image
-      description: reference of the image that will get created
-      default: {{ include "image.dev-url" . }}
-    - name: git-committer
-      description: Email of user who committed the change
+    - name: git-repo-name
+    - name: content-type
+    - name: pusher-name
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: {{ .Values.app.name }}-run-build-
+        generateName: {{ .Values.app.name }}-run-
         labels:
-          backstage.io/kubernetes-id: {{ .Values.app.name }}
+          type: pipeline
       spec:
         params:
           - name: source-repo
             value: $(tt.params.git-repo-url)
           - name: source-branch
-            value: $(tt.params.git-revision)
+            value: main
           - name: output-image
-            value: $(tt.params.output-image)
+            value: https://{{ .Values.image.host }}/quayadmin/{{ .Values.app.name }}-{{ .Values.lab.username }}
           - name: sonarqube-host-url
             value: https://sonarqube-sonarqube{{ .Values.app.cluster }}
           - name: sonarqube-project-key
@@ -43,7 +39,7 @@ spec:
           - name: stackrox-secret
             value: {{ .Values.app.name }}-stackrox-token
           - name: git-host
-            value: gitlab-gitlab{{ .Values.app.cluster }}
+            value: {{ .Values.git.host }}
           - name: git-owner
             value: {{ .Values.git.org }}
           - name: component-id
@@ -55,9 +51,9 @@ spec:
           - name: tuf-mirror
             value: http://tuf.trusted-artifact-signer.svc
           - name: certificate-identity
-            value: $(tt.params.git-committer)
+            value: http://tuf.trusted-artifact-signer.svc
           - name: oidc-issuer
-            value:  https://keycloak-rhsso{{ .Values.app.cluster }}/auth/realms/openshift
+            value:  {{ .Values.lab.sso }}
         pipelineRef:
           name: {{ .Values.app.name }}-build
         serviceAccountName: pipeline
@@ -65,6 +61,17 @@ spec:
         workspaces:
           - name: reports
             emptyDir: {}
+          - name: sshkey
+            secret:
+              secretName: gitssh
+          - name: maven-local
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi          
           - name: source-folder
             volumeClaimTemplate:
               spec:

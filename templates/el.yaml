@@ -1,5 +1,5 @@
 ---
-apiVersion: triggers.tekton.dev/v1alpha1
+apiVersion: triggers.tekton.dev/v1beta11
 kind: EventListener
 metadata:
   name: {{ .Values.app.name }}-el
@@ -7,17 +7,7 @@ spec:
   serviceAccountName: pipeline
   triggers:
     - bindings:
-        - kind: TriggerBinding
-          ref: commit-binding
-      interceptors:
-        - params:
-            - name: filter
-              value: has(body.commits) && body.object_kind == 'push'
-            - name: overlays
-              value: null
-          ref:
-            kind: ClusterInterceptor
-            name: cel
-      name: commit-trig
+        - kind: ClusterTriggerBinding
+          ref: github-push
       template:
-        ref: {{ .Values.app.name }}-run-build
+        ref: {{ .Values.app.name }}-tt

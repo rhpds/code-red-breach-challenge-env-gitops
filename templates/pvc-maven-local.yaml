@@ -1,6 +1,9 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/ignore-healthcheck: "true"
   name: pvc-maven-local
   namespace: customers-{{ .Values.lab.username }}
   finalizers:

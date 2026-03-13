@@ -2,7 +2,7 @@ app:
   name: customers
   namespace: customers-{{ code_red_breach_challenge_gitea_customize_lab_username }}
   cluster: .{{ code_red_breach_challenge_gitea_customize_apps_subdomain }}
-  bastionIp: {{ code_red_breach_challenge_gitea_customize_bastion_ip }}
+  bastionIp: 0.0.0.0
 
 git:
   branch: main

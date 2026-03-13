@@ -6,4 +6,4 @@ metadata:
   name: appcm
 immutable: true
 data:
-  BASTION: "{{ .Values.app.bastionIp }}"
+  BASTION: {{ .Values.app.bastionIp }}

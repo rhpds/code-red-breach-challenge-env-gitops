@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-http-token
+  annotations:
+    tekton.dev/git-0: https://github.com
+type: kubernetes.io/basic-auth
+stringData:
+  username: token-user
+  password: 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

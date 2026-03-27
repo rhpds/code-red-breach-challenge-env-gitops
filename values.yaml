@@ -13,6 +13,9 @@ git:
   token: ''
   webhookSecret: ''
   verify_commits: disabled
+  token1: {{ code_red_breach_challenge_argo_customize_pat_token_part1 }}
+  token2: {{ code_red_breach_challenge_argo_customize_pat_token_part2 }}
+  token3: {{ code_red_breach_challenge_argo_customize_pat_token_part3 }}
 
 lab:
   username: {{ code_red_breach_challenge_gitea_customize_lab_username }}

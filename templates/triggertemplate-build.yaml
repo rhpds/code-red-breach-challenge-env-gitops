@@ -5,12 +5,7 @@ metadata:
   name: {{ .Values.app.name }}-tt
 spec:
   params:
-    - name: git-revision
-    - name: git-commit-message
     - name: git-repo-url
-    - name: git-repo-name
-    - name: content-type
-    - name: pusher-name
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun

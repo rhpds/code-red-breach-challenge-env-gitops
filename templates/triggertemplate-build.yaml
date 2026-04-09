@@ -10,7 +10,7 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        generateName: {{ .Values.app.name }}-run-
+        generateName: {{ .Values.app.name }}-Pipelinerun-
         labels:
           type: pipeline
       spec:
@@ -23,12 +23,6 @@ spec:
             value: main
           - name: output-image
             value: {{ .Values.image.host }}/quayadmin/{{ .Values.app.name }}-{{ .Values.lab.username }}
-          - name: sonarqube-host-url
-            value: https://sonarqube-sonarqube{{ .Values.app.cluster }}
-          - name: sonarqube-project-key
-            value: {{ .Values.lab.username }}-{{ .Values.app.name }}
-          - name: sonarqube-project-secret
-            value: {{ .Values.app.name }}-sonarqube-secret
           - name: cyclonedx-host-url
             value: https://cyclonedx-bom-repo-server-cyclonedx{{ .Values.app.cluster }}
           - name: stackrox-endpoint
@@ -52,7 +46,7 @@ spec:
           - name: oidc-issuer
             value:  {{ .Values.lab.sso }}
         pipelineRef:
-          name: {{ .Values.app.name }}-build
+          name: {{ .Values.app.name }}-pipeline
         serviceAccountName: pipeline
         timeout: 1h0m0s
         workspaces:
@@ -60,7 +54,7 @@ spec:
             emptyDir: {}
           - name: sshkey
             secret:
-              secretName: customers-ssh-git
+              secretName: {{ .Values.pipeline.ssh.secretName }}
           - name: maven-local
             persistentVolumeClaim:
               claimName: pvc-maven-local         
